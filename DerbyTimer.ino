@@ -51,10 +51,10 @@ void loop()
 {
   // We're using the wrong type of servo - the continues running
   // type. So we need to switch it 'off' fairly accurately after
-  // the right number of milli seconds. So we do this in the main 
+  // the right number of milli seconds. So we do this in the main
   // loop - and try to be careful to kick it off late in the state
   // changes.
-  // 
+  //
   if (moving && millis() - last_move > 200) {
     startServo.write(HOLD_POS);
     moving = false;
@@ -67,7 +67,7 @@ void loop()
     case WAIT: printText(0, MAX_DEVICES - 1, "waiting");
       Serial.println("Waiting for car...");
       state = WAITING;
-
+      last_change = millis();
       break;
     case WAITING:
       if (digitalRead(BUTTON_IN_PIN) == LOW) {
@@ -84,17 +84,18 @@ void loop()
       };
       break;
     case SET:
-      if ((millis() - last_change) % 700  < 300)
+      if ((millis() - last_change) % 600  < 200)
         digitalWrite(BUZZER_OUT_PIN, 0);
       else
         digitalWrite(BUZZER_OUT_PIN, 1);
 
       if (millis() - last_change > START_HOLD_DELAY) {
         state = RACE;
-        printText(0, MAX_DEVICES - 1, "    GO");
+        printText(0, MAX_DEVICES - 1, "    GO!");
         last_start = millis();
         Serial.println("Racing !");
         startServo.write(START_POS); moving = true; last_move = millis();
+        digitalWrite(BUZZER_OUT_PIN, 0);
       };
       break;
     case RACE:
@@ -113,11 +114,11 @@ void loop()
         state = HOLD;
         startServo.write(END_POS); moving = true; last_move = millis();
       }
+
       if (digitalRead(BUTTON_IN_PIN) == LOW &&  millis() - last_start > 1000) {
         printText(0, MAX_DEVICES - 1, "Abort!");
         delay(1000);
         state = RESET;
-        startServo.write(END_POS); moving = true; last_move = millis();
       };
       break;
     case HOLD:
