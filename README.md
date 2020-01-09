@@ -1,6 +1,8 @@
 # DerbyTimer
 
-Simple derby car timer - for gravity fed races at Henry's his demos.
+Simple derby car timer - for gravity fed races at Henry's his demos. (https://vimeo.com/383797381)
+
+![electronics](derbytimer-arduino.jpg])
 
 # Setup
 
