@@ -99,20 +99,22 @@ void loop()
       };
       break;
     case RACE:
-      if (millis() - last_change > 100 && millis() - last_start > 500) {
+      if (digitalRead(DETECTOR_IN_PIN) == HIGH &&  millis() - last_start > 500) {
+        state = HOLD;
+        startServo.write(END_POS); moving = true; last_move = millis();
+      }
+
+      if ((millis() - last_change > 100 && millis() - last_start > 500) || (state == HOLD)) {
         digitalWrite(BUZZER_OUT_PIN, 1);
         unsigned long l = millis() - last_start;
         int s = l / 1000;
         int m = s / 60;
         sprintf(buff, "%02d.%03d", s % 60, l % 1000);
         printText(0, MAX_DEVICES - 1, buff);
-      }
-
-      if (digitalRead(DETECTOR_IN_PIN) == HIGH &&  millis() - last_start > 500) {
-        Serial.print("Race finished - time: ");
-        Serial.println(buff);
-        state = HOLD;
-        startServo.write(END_POS); moving = true; last_move = millis();
+        if (state == HOLD) {
+          Serial.print("Race finished - time: ");
+          Serial.println(buff);
+        };
       }
 
       if (digitalRead(BUTTON_IN_PIN) == LOW &&  millis() - last_start > 1000) {

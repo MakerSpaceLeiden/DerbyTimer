@@ -10,6 +10,8 @@ Install photo diode sensor at finish. Make sure that the LED goes on/off as a ca
 
 Wire something to the servo motor to hold the car.
 
+Reset the unit after powerup -the servo can make it upset.
+
 # Racing
 
 1. Place the car
